@@ -11,34 +11,40 @@
 
 <script>
 async function payNow() {
-  const response = await fetch("https://rfid-wallet.vercel.app/create-order", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ amount: 100 })
-  });
+  try {
+    const response = await fetch("https://rfid-wallet.vercel.app/api/create-order", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ amount: 100 })
+    });
 
-  const order = await response.json();
+    const order = await response.json();
 
-  const options = {
-    key: "zp_test_SEstYyNNh2xWlu", // replace this
-    amount: order.amount,
-    currency: order.currency,
-    name: "RFID Wallet",
-    description: "Test Transaction",
-    order_id: order.id,
-    handler: function (response) {
-      alert("Payment Successful 🎉");
-      console.log(response);
-    },
-    theme: {
-      color: "#3399cc"
-    }
-  };
+    const options = {
+      key: "rzp_test_SEstYyNNh2xWlu",  // ✅ FIXED PREFIX
+      amount: order.amount,
+      currency: order.currency,
+      name: "RFID Wallet",
+      description: "Test Transaction",
+      order_id: order.id,
+      handler: function (response) {
+        alert("Payment Successful 🎉");
+        console.log(response);
+      },
+      theme: {
+        color: "#3399cc"
+      }
+    };
 
-  const rzp = new Razorpay(options);
-  rzp.open();
+    const rzp = new Razorpay(options);
+    rzp.open();
+
+  } catch (error) {
+    alert("Payment Failed ❌");
+    console.error(error);
+  }
 }
 </script>
 
